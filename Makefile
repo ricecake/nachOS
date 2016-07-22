@@ -32,7 +32,7 @@ $(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
 		make -j -l$(NPROCS) && \
 		make -j -l$(NPROCS) install
 
-	ln -s $(DATADIR)/binutils $(BUILDDIR)/binutils
+	ln -s ../$(DATADIR)/binutils $(BUILDDIR)/binutils
 
 $(BUILDDIR)/gcc: $(DATADIR)/gcc-$(GCCVERSION)
 	mkdir -p $(DATADIR)/gcc
@@ -47,7 +47,7 @@ $(BUILDDIR)/gcc: $(DATADIR)/gcc-$(GCCVERSION)
 		make -j -l$(NPROCS) install-gcc && \
 		make -j -l$(NPROCS) install-target-libgcc
 
-	ln -s $(DATADIR)/gcc $(BUILDDIR)/gcc
+	ln -s ../$(DATADIR)/gcc $(BUILDDIR)/gcc
 
 $(DATADIR)/binutils-$(BINUTILVERSION): $(DATADIR)/binutils.tar.bz2
 	tar -C $(DATADIR) -xf $(DATADIR)/binutils.tar.bz2
