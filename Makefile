@@ -2,6 +2,8 @@ SHELL := /bin/bash
 
 current_dir := $(shell pwd)
 
+NPROCS:=$(shell grep -c ^processor /proc/cpuinfo)
+
 BUILDDIR := build
 DATADIR  := $(BUILDDIR)/data
 TOOLDIR  := $(BUILDDIR)/tools
@@ -27,8 +29,8 @@ $(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
 
 	cd $(DATADIR)/binutils && \
 		../binutils-$(BINUTILVERSION)/configure --target=$(TARGET) --prefix="$(PREFIX)" --with-sysroot --disable-nls --disable-werror && \
-		make -l && \
-		make -l install
+		make -j -l$(NPROCS) && \
+		make -j -l$(NPROCS) install
 
 	ln -s $(DATADIR)/binutils $(BUILDDIR)/binutils
 
@@ -40,10 +42,10 @@ $(BUILDDIR)/gcc: $(DATADIR)/gcc-$(GCCVERSION)
 
 	cd $(DATADIR)/gcc && \
 		../gcc-$(GCCVERSION)/configure --target=$(TARGET) --prefix="$(PREFIX)" --disable-nls --enable-languages=c,c++ --without-headers && \
-		make -l all-gcc && \
-		make -l all-target-libgcc && \
-		make -l install-gcc && \
-		make -l install-target-libgcc
+		make -j -l$(NPROCS) all-gcc && \
+		make -j -l$(NPROCS) all-target-libgcc && \
+		make -j -l$(NPROCS) install-gcc && \
+		make -j -l$(NPROCS) install-target-libgcc
 
 	ln -s $(DATADIR)/gcc $(BUILDDIR)/gcc
 
