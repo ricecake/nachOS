@@ -1,29 +1,51 @@
 SHELL := /bin/bash
 
-BUILDDIR = build
-DATADIR  = $(BUILDDIR)/data
-TOOLDIR  = $(BUILDDIR)/tools
-DIRS    := $(DATADIR) $(TOOLDIR)
+current_dir := $(shell pwd)
 
-GCCVERSION     = 6.1.0
-BINUTILVERSION = 2.26.1
+BUILDDIR := build
+DATADIR  := $(BUILDDIR)/data
+TOOLDIR  := $(BUILDDIR)/tools
+DIRS     := $(DATADIR) $(TOOLDIR)
+
+GCCVERSION     := 6.1.0
+BINUTILVERSION := 2.26.1
+
+PREFIX := $(current_dir)/$(TOOLDIR)
+TARGET := i686-elf
+PATH   := $(PREFIX)/bin:$(PATH)"
+
 
 .PHONY : tools build_dirs
 
-tools: build_dirs $(TOOLDIR)/binutils $(TOOLDIR)/gcc
+tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
 
 build_dirs:
 	mkdir -p $(DIRS)
 
-$(TOOLDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
-	pushd $(DATADIR)/binutils-$(BINUTILVERSION) && \
-	./configure && \
-	make && \
-	popd
-	ln -s $(DATADIR)/binutils-$(BINUTILVERSION) $(TOOLDIR)/binutils
+$(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
+	mkdir -p $(DATADIR)/binutils
 
-$(TOOLDIR)/gcc: $(DATADIR)/gcc-$(GCCVERSION)
-	ln -s $(DATADIR)/gcc-$(GCCVERSION) $(TOOLDIR)/gcc
+	cd $(DATADIR)/binutils && \
+		../binutils-$(BINUTILVERSION)/configure --target=$(TARGET) --prefix="$(PREFIX)" --with-sysroot --disable-nls --disable-werror && \
+		make -l && \
+		make -l install
+
+	ln -s $(DATADIR)/binutils $(BUILDDIR)/binutils
+
+$(BUILDDIR)/gcc: $(DATADIR)/gcc-$(GCCVERSION)
+	mkdir -p $(DATADIR)/gcc
+
+	cd $(DATADIR)/gcc-$(GCCVERSION) && \
+		./contrib/download_prerequisites
+
+	cd $(DATADIR)/gcc && \
+		../gcc-$(GCCVERSION)/configure --target=$(TARGET) --prefix="$(PREFIX)" --disable-nls --enable-languages=c,c++ --without-headers && \
+		make -l all-gcc && \
+		make -l all-target-libgcc && \
+		make -l install-gcc && \
+		make -l install-target-libgcc
+
+	ln -s $(DATADIR)/gcc $(BUILDDIR)/gcc
 
 $(DATADIR)/binutils-$(BINUTILVERSION): $(DATADIR)/binutils.tar.bz2
 	tar -C $(DATADIR) -xf $(DATADIR)/binutils.tar.bz2
