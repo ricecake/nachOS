@@ -19,7 +19,7 @@ PATH   := $(PREFIX)/bin:$(PATH)"
 
 kernel: tools
 
-.PHONY : tools build_dirs
+.PHONY : tools build_dirs kernel
 
 tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
 
