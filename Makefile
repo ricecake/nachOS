@@ -17,6 +17,8 @@ TARGET := i686-elf
 PATH   := $(PREFIX)/bin:$(PATH)"
 
 
+kernel: tools
+
 .PHONY : tools build_dirs
 
 tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
