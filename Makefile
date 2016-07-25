@@ -16,17 +16,31 @@ PREFIX := $(current_dir)/$(TOOLDIR)
 TARGET := i686-elf
 PATH   := $(PREFIX)/bin:$(PATH)"
 
+CC := i686-elf-gcc
+AS := i686-elf-as
+AR := i686-elf-ar
+
+OBJ_LINK_LIST := src/boot.o src/kernel.o
+
+.PHONY : tools build_dirs kernel image
 
 image: kernel
 
-kernel: tools
-
-.PHONY : tools build_dirs kernel image
+kernel: tools nachos.bin
 
 tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
 
 build_dirs:
 	mkdir -p $(DIRS)
+
+src/kernel.o: src/kernel.c
+	$(CC) -c $< -o $@ -std=gnu11 -ffreestanding -O3 -Wall -Wextra
+
+src/boot.o: src/boot.s
+	$(CC) -c $< -o $@ -ffreestanding -O3 -Wall -Wextra
+
+nachos.bin: $(OBJ_LINK_LIST)
+	$(CC) -T src/linker.ld -o $@ -ffreestanding -O3 -nostdlib $(OBJ_LINK_LIST) -lgcc
 
 $(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
 	mkdir -p $(DATADIR)/binutils
