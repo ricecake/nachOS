@@ -25,8 +25,12 @@ OBJ_LINK_LIST := src/boot.o src/kernel.o
 .PHONY : tools build_dirs kernel image
 
 image: kernel
+	mkdir -p $(BUILDDIR)/isodir/boot/grub
+	cp src/grub.cfg $(BUILDDIR)/isodir/boot/grub/grub.cfg
+	cp nachos.bin $(BUILDDIR)/isodir/boot/nachos.bin
+	grub-mkrescue -o nachos.iso $(BUILDDIR)/isodir
 
-kernel: tools nachos.bin
+kernel: tools src/nachos.bin
 
 tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
 
@@ -39,7 +43,7 @@ src/kernel.o: src/kernel.c
 src/boot.o: src/boot.s
 	$(CC) -c $< -o $@ -ffreestanding -O3 -Wall -Wextra
 
-nachos.bin: $(OBJ_LINK_LIST)
+src/nachos.bin: $(OBJ_LINK_LIST)
 	$(CC) -T src/linker.ld -o $@ -ffreestanding -O3 -nostdlib $(OBJ_LINK_LIST) -lgcc
 
 $(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
