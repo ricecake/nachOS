@@ -27,7 +27,7 @@ OBJ_LINK_LIST := src/boot.o src/kernel.o
 image: kernel
 	mkdir -p $(BUILDDIR)/isodir/boot/grub
 	cp src/grub.cfg $(BUILDDIR)/isodir/boot/grub/grub.cfg
-	cp nachos.bin $(BUILDDIR)/isodir/boot/nachos.bin
+	cp src/nachos.bin $(BUILDDIR)/isodir/boot/nachos.bin
 	grub-mkrescue -o nachos.iso $(BUILDDIR)/isodir
 
 kernel: tools src/nachos.bin
