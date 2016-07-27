@@ -25,7 +25,8 @@ OBJ_LINK_LIST := src/boot.o src/kernel.o
 .PHONY : tools build_dirs kernel image
 
 image: kernel
-	cp src/grub.cfg $(BUILDDIR)/sysroot/boot
+	mkdir -p $(BUILDDIR)/sysroot/boot/grub
+	cp src/grub.cfg $(BUILDDIR)/sysroot/boot/grub
 	grub-mkrescue -o build/nachos.iso $(BUILDDIR)/sysroot
 
 kernel: tools
