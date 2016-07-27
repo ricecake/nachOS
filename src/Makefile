@@ -32,4 +32,10 @@ libc:
 kernel:
 	$(MAKE) -C kernel
 
-.PHONY: kernel libc compile
+clean:
+	for PROJECT in $(PROJECTS); do \
+		$(MAKE) -C $$PROJECT clean; \
+	done
+
+
+.PHONY: kernel libc compile clean

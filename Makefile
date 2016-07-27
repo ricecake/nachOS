@@ -22,7 +22,7 @@ AR := i686-elf-ar
 
 OBJ_LINK_LIST := src/boot.o src/kernel.o
 
-.PHONY : tools build_dirs kernel image
+.PHONY : tools build_dirs kernel image clean
 
 image: kernel
 	mkdir -p $(BUILDDIR)/sysroot/boot/grub
@@ -36,6 +36,12 @@ tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
 
 build_dirs:
 	mkdir -p $(DIRS)
+
+clean:
+	rm -rfv $(BUILDDIR)/sysroot
+	rm -rfv $(BUILDDIR)/nachos.iso
+	$(MAKE) -C src clean
+
 
 $(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
 	mkdir -p $(DATADIR)/binutils
