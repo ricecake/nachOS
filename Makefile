@@ -28,7 +28,7 @@ image: kernel
 	mkdir -p $(BUILDDIR)/isodir/boot/grub
 	cp src/grub.cfg $(BUILDDIR)/isodir/boot/grub/grub.cfg
 	cp src/nachos.bin $(BUILDDIR)/isodir/boot/nachos.bin
-	grub-mkrescue -o nachos.iso $(BUILDDIR)/isodir
+	grub-mkrescue -o build/nachos.iso $(BUILDDIR)/isodir
 
 kernel: tools src/nachos.bin
 
