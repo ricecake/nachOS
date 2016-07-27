@@ -21,9 +21,11 @@ int printf(const char* restrict format, ...) {
 		if(*format != '%') {
 print_c:
 			amount = 1;
+
 			while(format[amount] && format[amount] != '%') {
 				amount++;
 			}
+
 			print(format, amount);
 			format += amount;
 			written += amount;

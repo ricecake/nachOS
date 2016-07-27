@@ -38,6 +38,6 @@ clean:
 	done
 
 format:
-	astyle -tyjnUr -k1 -A14 *.c *.h
+	astyle -tyjnfpUr -k1 -A14 *.c *.h
 
 .PHONY: kernel libc compile clean format
