@@ -37,5 +37,7 @@ clean:
 		$(MAKE) -C $$PROJECT clean; \
 	done
 
+format:
+	astyle -tyjnUr -k1 -A14 *.c *.h
 
-.PHONY: kernel libc compile clean
+.PHONY: kernel libc compile clean format

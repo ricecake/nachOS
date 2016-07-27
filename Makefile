@@ -22,7 +22,10 @@ AR := i686-elf-ar
 
 OBJ_LINK_LIST := src/boot.o src/kernel.o
 
-.PHONY : tools build_dirs kernel image clean
+.PHONY : tools build_dirs kernel image clean format
+
+format:
+	$(MAKE) -C src format
 
 image: kernel
 	mkdir -p $(BUILDDIR)/sysroot/boot/grub

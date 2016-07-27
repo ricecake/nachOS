@@ -5,12 +5,10 @@
 
 #include <kernel/tty.h>
 
-void kernel_early(void)
-{
+void kernel_early(void) {
 	terminal_initialize();
 }
 
-void kernel_main(void)
-{
+void kernel_main(void) {
 	printf("Hello, World!  I am a cheesy Operating System!");
 }
