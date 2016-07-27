@@ -4,17 +4,17 @@ current_dir := $(shell pwd)
 
 NPROCS:=$(shell grep -c ^processor /proc/cpuinfo)
 
-BUILDDIR := build
-DATADIR  := $(BUILDDIR)/data
-TOOLDIR  := $(BUILDDIR)/tools
-DIRS     := $(DATADIR) $(TOOLDIR)
+export BUILDDIR := build
+export DATADIR  := $(BUILDDIR)/data
+export TOOLDIR  := $(BUILDDIR)/tools
+export DIRS     := $(DATADIR) $(TOOLDIR)
 
 GCCVERSION     := 6.1.0
 BINUTILVERSION := 2.26.1
 
 PREFIX := $(current_dir)/$(TOOLDIR)
 TARGET := i686-elf
-PATH   := $(PREFIX)/bin:$(PATH)"
+export PATH   := $(PREFIX)/bin:$(PATH)
 
 CC := i686-elf-gcc
 AS := i686-elf-as
@@ -25,26 +25,16 @@ OBJ_LINK_LIST := src/boot.o src/kernel.o
 .PHONY : tools build_dirs kernel image
 
 image: kernel
-	mkdir -p $(BUILDDIR)/isodir/boot/grub
-	cp src/grub.cfg $(BUILDDIR)/isodir/boot/grub/grub.cfg
-	cp src/nachos.bin $(BUILDDIR)/isodir/boot/nachos.bin
-	grub-mkrescue -o build/nachos.iso $(BUILDDIR)/isodir
+	cp src/grub.cfg $(BUILDDIR)/sysroot/boot
+	grub-mkrescue -o build/nachos.iso $(BUILDDIR)/sysroot
 
-kernel: tools src/nachos.bin
+kernel: tools
+	$(MAKE) -C src compile
 
 tools: build_dirs $(BUILDDIR)/binutils $(BUILDDIR)/gcc
 
 build_dirs:
 	mkdir -p $(DIRS)
-
-src/kernel.o: src/kernel.c
-	$(CC) -c $< -o $@ -std=gnu11 -ffreestanding -O3 -Wall -Wextra
-
-src/boot.o: src/boot.s
-	$(CC) -c $< -o $@ -ffreestanding -O3 -Wall -Wextra
-
-src/nachos.bin: $(OBJ_LINK_LIST)
-	$(CC) -T src/linker.ld -o $@ -ffreestanding -O3 -nostdlib $(OBJ_LINK_LIST) -lgcc
 
 $(BUILDDIR)/binutils: $(DATADIR)/binutils-$(BINUTILVERSION)
 	mkdir -p $(DATADIR)/binutils
