@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -54,6 +55,11 @@ incomprehensible_conversion:
 			format++;
 			const char* s = va_arg(parameters, const char*);
 			print(s, strlen(s));
+		}
+		else if(*format == 'z') {
+			format++;
+			uint64_t i = va_arg(parameters, uint64_t);
+			print((const char*) &i, sizeof(uint64_t));
 		}
 		else {
 			goto incomprehensible_conversion;
