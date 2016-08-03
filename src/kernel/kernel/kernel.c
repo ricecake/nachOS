@@ -11,21 +11,10 @@ void kernel_early(void) {
 	terminal_initialize();
 }
 
-uint64_t descriptors[5];
 gdt_entry_t gdt_entries[5];
 gdt_ptr_t   gdt_ptr;
 
 void kernel_main(void) {
-	gdt_ptr.limit = (sizeof(uint64_t) * 5) - 1;
-	//gdt_ptr.base  = descriptors;
-
-	gdt_ptr.base  = gdt_entries;
-	//create_descriptor(&descriptors[0], 0, 0, 0);
-	//create_descriptor(&descriptors[1], 0, 0x000FFFFF, 0x9A);
-	//create_descriptor(&descriptors[2], 0, 0x000FFFFF, 0x92);
-	//create_descriptor(&descriptors[3], 0, 0x000FFFFF, 0xFA);
-	//create_descriptor(&descriptors[4], 0, 0x000FFFFF, 0xF2);
-
 	gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
 	gdt_ptr.base  = gdt_entries;
 
@@ -34,7 +23,6 @@ void kernel_main(void) {
 	gdt_set_gate(&gdt_entries[2], 0, 0xFFFFFFFF, 0x92, 0xCF); // Data segment
 	gdt_set_gate(&gdt_entries[3], 0, 0xFFFFFFFF, 0xFA, 0xCF); // User mode code segment
 	gdt_set_gate(&gdt_entries[4], 0, 0xFFFFFFFF, 0xF2, 0xCF); // User mode data segment
-
 
 	load_gdt(&gdt_ptr);
 	printf("Hello, World!  I am a cheesy Operating System! '%z' done", descriptors[0]);
