@@ -25,5 +25,5 @@ void kernel_main(void) {
 	gdt_set_gate(&gdt_entries[4], 0, 0xFFFFFFFF, 0xF2, 0xCF); // User mode data segment
 
 	load_gdt(&gdt_ptr);
-	printf("Hello, World!  I am a cheesy Operating System! '%z' done", descriptors[0]);
+	printf("Hello, World!  I am a cheesy Operating System!");
 }
