@@ -27,6 +27,4 @@ typedef struct gdt_ptr_struct gdt_ptr_t;
 
 void gdt_set_gate(gdt_entry_t* entry, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);
 
-extern void panic();
-
 #endif
